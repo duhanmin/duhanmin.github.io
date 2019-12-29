@@ -48,16 +48,21 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="标签">
-<meta property="og:url" content="https://duhanmin.github.io/tags/index.html">
+  <meta name="description" content="Changelog 4.5.4新特性 【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包 【core】     FileUtil增加isSub方法（pr#39@Gitee） 【core】     增加VoidFunc 【extra】     mail适配mail.setting和config&#x2F;mail.setting双配">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Changelog">
+<meta property="og:url" content="https://duhanmin.github.io/2017/05/26/Changelog/index.html">
 <meta property="og:site_name" content="野鹿">
-<meta property="article:published_time" content="2019-12-29T16:52:44.000Z">
-<meta property="article:modified_time" content="2019-12-29T17:25:50.272Z">
+<meta property="og:description" content="Changelog 4.5.4新特性 【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包 【core】     FileUtil增加isSub方法（pr#39@Gitee） 【core】     增加VoidFunc 【extra】     mail适配mail.setting和config&#x2F;mail.setting双配">
+<meta property="article:published_time" content="2017-05-26T04:12:57.000Z">
+<meta property="article:modified_time" content="2019-12-29T19:21:19.309Z">
 <meta property="article:author" content="杜函敏">
+<meta property="article:tag" content="hive">
+<meta property="article:tag" content="hbase">
+<meta property="article:tag" content="kafka">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://duhanmin.github.io/tags/">
+<link rel="canonical" href="https://duhanmin.github.io/2017/05/26/Changelog/">
 
 
 <script id="page-configurations">
@@ -65,12 +70,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>标签 | 野鹿
-  </title>
+  <title>Changelog | 野鹿</title>
   
 
 
@@ -203,52 +207,194 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
           <div class="content">
             
 
   <div class="posts-expand">
-    
-    
-    
-    <div class="post-block" lang="zs-Hans">
-      <header class="post-header">
-
-<h1 class="post-title" itemprop="name headline">标签
-</h1>
-
-<div class="post-meta">
+      
   
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zs-Hans">
+    <link itemprop="mainEntityOfPage" href="https://duhanmin.github.io/2017/05/26/Changelog/">
 
-</div>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tx.jpg">
+      <meta itemprop="name" content="杜函敏">
+      <meta itemprop="description" content="">
+    </span>
 
-</header>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="野鹿">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Changelog
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-26 12:12:57" itemprop="dateCreated datePublished" datetime="2017-05-26T12:12:57+08:00">2017-05-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-30 03:21:19" itemprop="dateModified" datetime="2019-12-30T03:21:19+08:00">2019-12-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+        <h1 id="Changelog"><a href="#Changelog" class="headerlink" title="Changelog"></a>Changelog</h1><hr>
+<h2 id="4-5-4"><a href="#4-5-4" class="headerlink" title="4.5.4"></a>4.5.4</h2><h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><ul>
+<li>【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包</li>
+<li>【core】     FileUtil增加isSub方法（pr#39@Gitee）</li>
+<li>【core】     增加VoidFunc</li>
+<li>【extra】     mail适配mail.setting和config/mail.setting双配置文件（感谢@【江门】小草哥）</li>
+<li>【corn】     cron适配cron.setting和config/cron.setting双配置文件（感谢@【江门】小草哥）</li>
+<li>【poi】       ExcelWriter增加autoSizeColumnAll方法，ExcelBase增加getColumnCount、getRowCount方法（感谢@@【长沙】M）</li>
+<li>【http】      添加SoapClient，删除SoapRequest</li>
+</ul>
+<h3 id="Bug修复"><a href="#Bug修复" class="headerlink" title="Bug修复"></a>Bug修复</h3><ul>
+<li>【db】        修复Session中事务问题（issue#IUQMN@Gitee）</li>
+<li>【db】        修复Db中关闭逻辑错误导致的事务问题（感谢@【宁波】mojie126）</li>
+<li>【http】      修复form方法使用Resource可能导致的空指针问题</li>
+<li>【crypto】   修复SM2Engine逻辑错误（感谢bcgit/bc-java）</li>
+</ul>
+<hr>
+<h2 id="4-5-4-1"><a href="#4-5-4-1" class="headerlink" title="4.5.4"></a>4.5.4</h2><h3 id="新特性-1"><a href="#新特性-1" class="headerlink" title="新特性"></a>新特性</h3><ul>
+<li>【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包</li>
+<li>【core】     FileUtil增加isSub方法（pr#39@Gitee）</li>
+<li>【core】     增加VoidFunc</li>
+<li>【extra】     mail适配mail.setting和config/mail.setting双配置文件（感谢@【江门】小草哥）</li>
+<li>【corn】     cron适配cron.setting和config/cron.setting双配置文件（感谢@【江门】小草哥）</li>
+<li>【poi】       ExcelWriter增加autoSizeColumnAll方法，ExcelBase增加getColumnCount、getRowCount方法（感谢@@【长沙】M）</li>
+<li>【http】      添加SoapClient，删除SoapRequest</li>
+</ul>
+<h3 id="Bug修复-1"><a href="#Bug修复-1" class="headerlink" title="Bug修复"></a>Bug修复</h3><ul>
+<li>【db】        修复Session中事务问题（issue#IUQMN@Gitee）</li>
+<li>【db】        修复Db中关闭逻辑错误导致的事务问题（感谢@【宁波】mojie126）</li>
+<li>【http】      修复form方法使用Resource可能导致的空指针问题</li>
+<li>【crypto】   修复SM2Engine逻辑错误（感谢bcgit/bc-java）</li>
+</ul>
+<hr>
+<h2 id="4-5-3"><a href="#4-5-3" class="headerlink" title="4.5.3"></a>4.5.3</h2><h3 id="新特性-2"><a href="#新特性-2" class="headerlink" title="新特性"></a>新特性</h3><ul>
+<li>【core】       Simhash添加读写锁（issue#IUF9O@Gitee）</li>
+<li>【core】       Img增加round方法，圆角给定图片</li>
+<li>【extra】      二维码中的图片做圆角处理</li>
+<li>【core】       CsvData实现Iterable接口</li>
+<li>【extra】      Ftp增加重连方法（pr#38@Gitee）</li>
+<li>【extra】      Velocity升级至2.x，不再兼容1.7</li>
+</ul>
+<h3 id="Bug修复-2"><a href="#Bug修复-2" class="headerlink" title="Bug修复"></a>Bug修复</h3><ul>
+<li>【core】       修复ReflectUtil新建Map对象错误问题（issue#IUF9O@Gitee）</li>
+<li>【core】       修复ImgUtil字体为null导致的空指针问题（issue#IUF3X@Gitee）</li>
+<li>【extra】      修复Ftp中文件上传mkdirs方法创建多余文件夹的问题（issue#ITAYV@Gitee）</li>
+<li>【extra】      修复Ftp中文件上传mkdirs方法创建多余文件夹的问题（issue#ITAYV@Gitee）</li>
+</ul>
+<hr>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
       
-      
-      <div class="post-body">
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-              目前共计 6 个标签
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/MQ/" style="font-size: 12px; color: #ccc">MQ</a> <a href="/tags/Neo4J/" style="font-size: 12px; color: #ccc">Neo4J</a> <a href="/tags/hbase/" style="font-size: 12px; color: #ccc">hbase</a> <a href="/tags/hive/" style="font-size: 12px; color: #ccc">hive</a> <a href="/tags/kafka/" style="font-size: 12px; color: #ccc">kafka</a> <a href="/tags/nginx/" style="font-size: 12px; color: #ccc">nginx</a>
-            </div>
-          </div>
-        
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="杜函敏 微信支付">
+        <p>微信支付</p>
       </div>
       
-      
-      
-    </div>
-    
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="杜函敏 支付宝">
+        <p>支付宝</p>
+      </div>
 
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>杜函敏
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://duhanmin.github.io/2017/05/26/Changelog/" title="Changelog">https://duhanmin.github.io/2017/05/26/Changelog/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zs-Hans" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/hive/" rel="tag"># hive</a>
+              <a href="/tags/hbase/" rel="tag"># hbase</a>
+              <a href="/tags/kafka/" rel="tag"># kafka</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2017/05/26/hello-world/" rel="next" title="Hello World">
+      Hello World <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
     
-    
-    
+  </article>
+  
+  
+  
+
   </div>
 
 
@@ -305,6 +451,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Changelog"><span class="nav-number">1.</span> <span class="nav-text">Changelog</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-4"><span class="nav-number">1.1.</span> <span class="nav-text">4.5.4</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新特性"><span class="nav-number">1.1.1.</span> <span class="nav-text">新特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bug修复"><span class="nav-number">1.1.2.</span> <span class="nav-text">Bug修复</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-4-1"><span class="nav-number">1.2.</span> <span class="nav-text">4.5.4</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新特性-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">新特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bug修复-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">Bug修复</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-3"><span class="nav-number">1.3.</span> <span class="nav-text">4.5.3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新特性-2"><span class="nav-number">1.3.1.</span> <span class="nav-text">新特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bug修复-2"><span class="nav-number">1.3.2.</span> <span class="nav-text">Bug修复</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
