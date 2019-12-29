@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zs-Hans">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -40,21 +40,21 @@
       hits: {"per_page":10},
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
-    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
+    path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
   };
 </script>
 
   <meta name="description" content="为什么要做这个博客在我们学习的时候，很多人会面临我不知道继续学什么或者面试会问什么的尴尬情况（我本人之前就很迷茫😄）。所以，我决定通过这个开源平台来帮助一些有需要的人。开源的最大目的是，让更多人参与进来，这样文档的正确性才能得以保障！">
 <meta property="og:type" content="website">
-<meta property="og:title" content="about">
+<meta property="og:title" content="关于">
 <meta property="og:url" content="https://github.com/duhanmin/about/index.html">
 <meta property="og:site_name" content="野鹿">
 <meta property="og:description" content="为什么要做这个博客在我们学习的时候，很多人会面临我不知道继续学什么或者面试会问什么的尴尬情况（我本人之前就很迷茫😄）。所以，我决定通过这个开源平台来帮助一些有需要的人。开源的最大目的是，让更多人参与进来，这样文档的正确性才能得以保障！">
 <meta property="article:published_time" content="2019-12-29T14:52:58.000Z">
-<meta property="article:modified_time" content="2019-12-29T16:37:36.822Z">
-<meta property="article:author" content="杜函敏">
+<meta property="article:modified_time" content="2019-12-29T17:09:39.876Z">
+<meta property="article:author" content="永不止步的深思与拷问">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://github.com/duhanmin/about/">
@@ -69,7 +69,7 @@
   };
 </script>
 
-  <title>about | 野鹿
+  <title>关于 | 野鹿
   </title>
   
 
@@ -122,7 +122,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="切换导航栏">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -136,22 +136,62 @@
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home书"></i>Startseite</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user书"></i>Über</a>
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">0</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">0</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive书"></i>Archiv</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">1</span></a>
 
   </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-fw fa-heartbeat"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 
 </nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
 </div>
     </header>
 
@@ -178,10 +218,10 @@
     
     
     
-    <div class="post-block" lang="zh-Hans">
+    <div class="post-block" lang="zs-Hans">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">about
+<h1 class="post-title" itemprop="name headline">关于
 </h1>
 
 <div class="post-meta">
@@ -254,10 +294,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          文章目录
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          站点概览
         </li>
       </ul>
 
@@ -269,7 +309,9 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">杜函敏</p>
+    <img class="site-author-image" itemprop="image" alt="永不止步的深思与拷问"
+      src="/images/tx.jpg">
+  <p class="site-author-name" itemprop="name">永不止步的深思与拷问</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap motion-element">
@@ -278,13 +320,30 @@
           <a href="/archives/">
         
           <span class="site-state-item-count">1</span>
-          <span class="site-state-item-name">Artikel</span>
+          <span class="site-state-item-name">日志</span>
         </a>
       </div>
   </nav>
 </div>
-  <div class="cc-license motion-element" itemprop="license">
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-Hans" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duhanmin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duhanmin"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:duhanmin@foxmail.com" title="E-Mail → mailto:duhanmin@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/duhanmin" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;duhanmin" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://plus.google.com/duhanmin" title="Google → https:&#x2F;&#x2F;plus.google.com&#x2F;duhanmin" rel="noopener" target="_blank"><i class="fa fa-fw fa-google"></i>Google</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/duhanmin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;duhanmin" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/duhanmin" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;duhanmin" rel="noopener" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
   </div>
 
 
@@ -310,7 +369,7 @@
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">杜函敏</span>
+  <span class="author" itemprop="copyrightHolder">永不止步的深思与拷问</span>
 </div>
         
 <div class="busuanzi-count">
@@ -319,7 +378,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-user"></i>
       </span>
-      <span class="site-uv" title="Alle Besucher">
+      <span class="site-uv" title="总访客量">
         <span id="busuanzi_value_site_uv"></span>
       </span>
     </span>
@@ -328,7 +387,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-eye"></i>
       </span>
-      <span class="site-pv" title="Alle Aufrufe">
+      <span class="site-pv" title="总访问量">
         <span id="busuanzi_value_site_pv"></span>
       </span>
     </span>
@@ -366,6 +425,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 
