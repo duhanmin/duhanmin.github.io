@@ -351,11 +351,11 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2017/05/26/Changelog/" rel="next" title="Changelog">
-      Changelog <i class="fa fa-chevron-right"></i>
+    <a href="/2017/05/26/Changelog/" rel="prev" title="Changelog">
+      <i class="fa fa-chevron-left"></i> Changelog
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -369,11 +369,7 @@
 
           </div>
           
-    
-  <div class="comments">
-    <div id="lv-container" data-id="city" data-uid="MTAyMC80MjI5OC8xODg0NQ=="></div>
-  </div>
-  
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -590,19 +586,23 @@ if (document.querySelectorAll('pre.mermaid').length) {
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
 <script>
-NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
-  window.livereOptions = {
-    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
-  };
-  (function(d, s) {
-    var j, e = d.getElementsByTagName(s)[0];
-    if (typeof LivereTower === 'function') { return; }
-    j = d.createElement(s);
-    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-    j.async = true;
-    e.parentNode.insertBefore(j, e);
-  })(document, 'script');
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '9659570927973b3f59b3',
+      clientSecret: '513b039099389427b6101597d33c252e227ef231',
+      repo: 'duhanmin.github.io',
+      owner: 'duhanmin',
+      admin: ['duhanmin'],
+      id: '8d065685d20896ca3cc1402639e9a0cd',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
 });
 </script>
 
