@@ -240,7 +240,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2019-12-31 11:22:29 / 修改时间：11:29:46" itemprop="dateCreated datePublished" datetime="2019-12-31T11:22:29+08:00">2019-12-31</time>
+              <time title="创建时间：2019-12-31 11:22:29 / 修改时间：11:30:42" itemprop="dateCreated datePublished" datetime="2019-12-31T11:22:29+08:00">2019-12-31</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -271,101 +271,14 @@
 <li>hadoop 2.7.2 搭建HDFS和Yarn</li>
 <li>flink 1.9.1（scala 2.11）</li>
 </ol>
-<p>Zookeeper, HDFS 和 Yarn 的组件的安装可以参照网上的教程。</p>
-<p>在zookeeper，HDFS 和Yarn的组件的安装好的前提下，在客户机上提交Flink任务，具体流程如下：</p>
-<ul>
-<li>在启动Yarn-Session 之前， 设置好HADOOP_HOME,YARN_CONF_DIR ， HADOOP_CONF_DIR环境变量中三者的一个。如下所示， 根据具体的hadoop 路径来设置（CDH和HDP不知道的话可以在机器上直接搜索）</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ export HADOOP_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;hadoop-current</span><br></pre></td></tr></table></figure>
-<ul>
-<li>配置flink 目录下的flink-conf.yaml, 如下所示<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jobmanager.rpc.address:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">jobmanager.rpc.port:</span> <span class="number">6123</span></span><br><span class="line"><span class="attr">jobmanager.heap.mb:</span> <span class="number">256</span></span><br><span class="line"><span class="attr">taskmanager.heap.mb:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">taskmanager.numberOfTaskSlots:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">taskmanager.memory.preallocate:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">parallelism.default:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">jobmanager.web.port:</span> <span class="number">8081</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># yarn</span></span><br><span class="line"><span class="attr">yarn.maximum-failed-containers:</span> <span class="number">99999</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#akka config</span></span><br><span class="line"><span class="attr">akka.watch.heartbeat.interval:</span> <span class="number">5</span> <span class="string">s</span></span><br><span class="line"><span class="attr">akka.watch.heartbeat.pause:</span> <span class="number">20</span> <span class="string">s</span></span><br><span class="line"><span class="attr">akka.ask.timeout:</span> <span class="number">60</span> <span class="string">s</span></span><br><span class="line"><span class="attr">akka.framesize:</span> <span class="string">20971520b</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#high-avaliability</span></span><br><span class="line"><span class="attr">high-availability:</span> <span class="string">zookeeper</span></span><br><span class="line"><span class="comment">## 根据安装的zookeeper信息填写</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.quorum:</span> <span class="number">10.141</span><span class="number">.61</span><span class="number">.226</span><span class="string">:2181,10.141.53.244:2181,10.141.18.219:2181</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.path.root:</span> <span class="string">/flink</span></span><br><span class="line"><span class="comment">## HA 信息存储到HDFS的目录，根据各自的Hdfs情况修改</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.storageDir:</span> <span class="string">hdfs://hdcluster/flink/recovery/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#checkpoint config</span></span><br><span class="line"><span class="attr">state.backend:</span> <span class="string">rocksdb</span></span><br><span class="line"><span class="comment">## checkpoint到HDFS的目录 根据各自安装的HDFS情况修改</span></span><br><span class="line"><span class="attr">state.backend.fs.checkpointdir:</span> <span class="string">hdfs://hdcluster/flink/checkpoint</span></span><br><span class="line"><span class="comment">## 对外checkpoint到HDFS的目录</span></span><br><span class="line"><span class="attr">state.checkpoints.dir:</span> <span class="string">hdfs://hdcluster/flink/savepoint</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#memory config</span></span><br><span class="line"><span class="attr">env.java.opts:</span> <span class="string">-XX:+UseConcMarkSweepGC</span> <span class="string">-XX:CMSInitiatingOccupancyFraction=75</span> <span class="string">-XX:+UseCMSInitiatingOccupancyOnly</span> <span class="string">-XX:+AlwaysPreTouch</span> <span class="string">-server</span> <span class="string">-XX:+HeapDumpOnOutOfMemoryError</span></span><br><span class="line"><span class="attr">yarn.heap-cutoff-ratio:</span> <span class="number">0.2</span></span><br><span class="line"><span class="attr">taskmanager.memory.off-heap:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></li>
-<li>提交Yarn-Session，切换到flink的bin 目录下,提交命令如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ .&#x2F;yarn-session.sh -n 2 -s 6 -jm 3072 -tm 6144 -nm test -d</span><br></pre></td></tr></table></figure>
-启动yarn-session的参数解释如下</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>参数解释</th>
-<th>设置推荐</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-n(–container)</td>
-<td>taskmanager的数量</td>
-<td></td>
-</tr>
-<tr>
-<td>-s(–slots)</td>
-<td>用启动应用所需的slot数量/ -s 的值向上取整，有时可以多一些taskmanager，做冗余 每个taskmanager的slot数量，默认一个slot一个core，默认每个taskmanager的slot的个数为1</td>
-<td>6～10</td>
-</tr>
-<tr>
-<td>-jm</td>
-<td>jobmanager的内存（单位MB)</td>
-<td>3072</td>
-</tr>
-<tr>
-<td>-tm</td>
-<td>每个taskmanager的内存（单位MB)</td>
-<td>根据core 与内存的比例来设置，-s的值＊ （core与内存的比）来算</td>
-</tr>
-<tr>
-<td>-nm</td>
-<td>yarn 的appName(现在yarn的ui上的名字)｜</td>
-<td></td>
-</tr>
-<tr>
-<td>-d</td>
-<td>后台执行</td>
-<td></td>
-</tr>
-</tbody></table>
-<ul>
-<li>提交yarn－session 后，可以在yarn的ui上看到一个应用（应用有一个appId）, 切换到flink的bin目录下，提交flink 应用。命令如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ .&#x2F;flink -run file:&#x2F;&#x2F;&#x2F;home&#x2F;yarn&#x2F;test.jar -a 1 -p 12 -yid appId -nm flink-test -d</span><br></pre></td></tr></table></figure>
-启动flink 应用的参数解释如下</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>参数解释</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-j</td>
-<td>运行flink 应用的jar所在的目录</td>
-</tr>
-<tr>
-<td>-a</td>
-<td>运行flink 应用的主方法的参数</td>
-</tr>
-<tr>
-<td>-p</td>
-<td>运行flink应用的并行度</td>
-</tr>
-<tr>
-<td>-c</td>
-<td>运行flink应用的主类, 可以通过在打包设置主类</td>
-</tr>
-<tr>
-<td>-nm</td>
-<td>flink 应用名字，在flink-ui 上面展示</td>
-</tr>
-<tr>
-<td>-d</td>
-<td>后台执行</td>
-</tr>
-<tr>
-<td>–fromsavepoint</td>
-<td>flink 应用启动的状态恢复点</td>
-</tr>
-</tbody></table>
-<ul>
-<li>启动flink应用成功，即可在yarn ui 点击对应应用的ApplicationMaster链接,既可以查看flink-ui ，并查看flink 应用运行情况。</li>
-</ul>
-<p>注：在安装部署遇到任何问题，可以在小象问答，微信群以及私聊提出，我们一般会在晚上作答（由于白天要上班，作答不及时请谅解。）</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/31/flink%20on%20yarn%E9%83%A8%E7%BD%B2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
