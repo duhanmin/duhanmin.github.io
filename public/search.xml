@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>mysql优化学习on DUPLICATE key Update</title>
-    <url>/2019/12/31/mysql%E4%BC%98%E5%8C%96%E5%AD%A6%E4%B9%A0on%20DUPLICATE%20key%20Update/</url>
+    <title>mysql优化on DUPLICATE key Update</title>
+    <url>/2019/12/31/mysql%E4%BC%98%E5%8C%96on%20DUPLICATE%20key%20Update/</url>
     <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>有张表，里面的记录不能存在重复记录，记录存在就更新，如果不存在就插入，分布式并发场景下会存在以下问题：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"> Duplicate entry '1203923435854168066-139-68' for key 'PRIMARY'</span><br></pre></td></tr></table></figure>
 
