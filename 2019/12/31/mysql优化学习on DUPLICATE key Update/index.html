@@ -48,28 +48,32 @@
   };
 </script>
 
-  <meta name="description" content="永不止步的深思与拷问">
-<meta property="og:type" content="website">
-<meta property="og:title" content="野鹿">
-<meta property="og:url" content="https://duhanmin.github.io/index.html">
+  <meta name="description" content="场景有张表，里面的记录不能存在重复记录，记录存在就更新，如果不存在就插入，分布式并发场景下会存在以下问题： 1 Duplicate entry &#39;1203923435854168066-139-68&#39; for key &#39;PRIMARY&#39;    解决方案  DUPLICATE key Update（本文重点）  分布式锁    传统做法  两条sql语句，对于大并发来说，存在性能问题。 123456">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql优化学习on DUPLICATE key Update">
+<meta property="og:url" content="https://duhanmin.github.io/2019/12/31/mysql%E4%BC%98%E5%8C%96%E5%AD%A6%E4%B9%A0on%20DUPLICATE%20key%20Update/index.html">
 <meta property="og:site_name" content="野鹿">
-<meta property="og:description" content="永不止步的深思与拷问">
+<meta property="og:description" content="场景有张表，里面的记录不能存在重复记录，记录存在就更新，如果不存在就插入，分布式并发场景下会存在以下问题： 1 Duplicate entry &#39;1203923435854168066-139-68&#39; for key &#39;PRIMARY&#39;    解决方案  DUPLICATE key Update（本文重点）  分布式锁    传统做法  两条sql语句，对于大并发来说，存在性能问题。 123456">
+<meta property="article:published_time" content="2019-12-31T02:54:29.000Z">
+<meta property="article:modified_time" content="2019-12-31T03:06:35.168Z">
 <meta property="article:author" content="杜函敏">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="优化">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://duhanmin.github.io/">
+<link rel="canonical" href="https://duhanmin.github.io/2019/12/31/mysql%E4%BC%98%E5%8C%96%E5%AD%A6%E4%B9%A0on%20DUPLICATE%20key%20Update/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
-    isPost: false
+    isHome: false,
+    isPost: true
   };
 </script>
 
-  <title>野鹿</title>
+  <title>mysql优化学习on DUPLICATE key Update | 野鹿</title>
   
 
 
@@ -211,10 +215,10 @@
             
 
   <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zs-Hans">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zs-Hans">
     <link itemprop="mainEntityOfPage" href="https://duhanmin.github.io/2019/12/31/mysql%E4%BC%98%E5%8C%96%E5%AD%A6%E4%B9%A0on%20DUPLICATE%20key%20Update/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -228,8 +232,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/12/31/mysql%E4%BC%98%E5%8C%96%E5%AD%A6%E4%B9%A0on%20DUPLICATE%20key%20Update/" class="post-title-link" itemprop="url">mysql优化学习on DUPLICATE key Update</a>
+          mysql优化学习on DUPLICATE key Update
         </h1>
 
         <div class="post-meta">
@@ -255,6 +258,13 @@
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
 
         </div>
       </header>
@@ -265,7 +275,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>有张表，里面的记录不能存在重复记录，记录存在就更新，如果不存在就插入，分布式并发场景下会存在以下问题：</p>
+        <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>有张表，里面的记录不能存在重复记录，记录存在就更新，如果不存在就插入，分布式并发场景下会存在以下问题：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> Duplicate entry '1203923435854168066-139-68' for key 'PRIMARY'</span><br></pre></td></tr></table></figure>
 
 <hr>
@@ -299,184 +309,68 @@
 </li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">受影响的行: 2</span><br><span class="line">时间: 0.005s</span><br></pre></td></tr></table></figure>
-      
     </div>
 
     
     
     
+        <div class="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="杜函敏 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="杜函敏 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>杜函敏
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://duhanmin.github.io/2019/12/31/mysql%E4%BC%98%E5%8C%96%E5%AD%A6%E4%B9%A0on%20DUPLICATE%20key%20Update/" title="mysql优化学习on DUPLICATE key Update">https://duhanmin.github.io/2019/12/31/mysql优化学习on DUPLICATE key Update/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zs-Hans" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/mysql/" rel="tag"># mysql</a>
+              <a href="/tags/%E4%BC%98%E5%8C%96/" rel="tag"># 优化</a>
+          </div>
 
         
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zs-Hans">
-    <link itemprop="mainEntityOfPage" href="https://duhanmin.github.io/2017/05/26/hello-world/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/tx.jpg">
-      <meta itemprop="name" content="杜函敏">
-      <meta itemprop="description" content="永不止步的深思与拷问">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="野鹿">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/05/26/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-05-26 12:12:57" itemprop="dateCreated datePublished" datetime="2017-05-26T12:12:57+08:00">2017-05-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-30 04:53:17" itemprop="dateModified" datetime="2019-12-30T04:53:17+08:00">2019-12-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/flink/" itemprop="url" rel="index">
-                    <span itemprop="name">flink</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/05/26/hello-world/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/05/26/hello-world/" rel="prev" title="Hello World">
+      <i class="fa fa-chevron-left"></i> Hello World
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zs-Hans">
-    <link itemprop="mainEntityOfPage" href="https://duhanmin.github.io/2017/05/26/Changelog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/tx.jpg">
-      <meta itemprop="name" content="杜函敏">
-      <meta itemprop="description" content="永不止步的深思与拷问">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="野鹿">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/05/26/Changelog/" class="post-title-link" itemprop="url">Changelog</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-05-26 12:12:57" itemprop="dateCreated datePublished" datetime="2017-05-26T12:12:57+08:00">2017-05-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-30 04:55:37" itemprop="dateModified" datetime="2019-12-30T04:55:37+08:00">2019-12-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spark/" itemprop="url" rel="index">
-                    <span itemprop="name">spark</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="4-5-4"><a href="#4-5-4" class="headerlink" title="4.5.4"></a>4.5.4</h2><h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><ul>
-<li>【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包</li>
-<li>【core】     FileUtil增加isSub方法（pr#39@Gitee）
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/05/26/Changelog/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
   </article>
   
   
@@ -484,12 +378,10 @@
 
   </div>
 
-  
-
-
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -536,6 +428,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#场景"><span class="nav-number">1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#忧化方法"><span class="nav-number">2.</span> <span class="nav-text">忧化方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sql语句实例"><span class="nav-number">2.0.1.</span> <span class="nav-text">sql语句实例</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -705,6 +598,25 @@ if (document.querySelectorAll('pre.mermaid').length) {
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '9659570927973b3f59b3',
+      clientSecret: '513b039099389427b6101597d33c252e227ef231',
+      repo: 'duhanmin.github.io',
+      owner: 'duhanmin',
+      admin: ['duhanmin'],
+      id: '3e7fa1e554fd3078892303d601c7dfc5',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
   
   <script type="text/javascript" src="/js/dynamic_bg.js"></script>
