@@ -240,7 +240,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2019-12-31 10:54:29 / 修改时间：11:06:35" itemprop="dateCreated datePublished" datetime="2019-12-31T10:54:29+08:00">2019-12-31</time>
+              <time title="创建时间：2019-12-31 10:54:29 / 修改时间：11:07:41" itemprop="dateCreated datePublished" datetime="2019-12-31T10:54:29+08:00">2019-12-31</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -272,33 +272,15 @@
 <ul>
 <li><strong>解决方案</strong></li>
 <li><input checked="" disabled="" type="checkbox"> DUPLICATE key Update（本文重点）</li>
-<li><input disabled="" type="checkbox"> 分布式锁</li>
-</ul>
-<hr>
-<ul>
-<li><strong>传统做法</strong></li>
-</ul>
-<p>两条sql语句，对于大并发来说，存在性能问题。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入或更新数据</span></span><br><span class="line"><span class="comment"> * 此方法不会关闭Connection</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> conn   数据库连接</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> record 记录</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> keys   需要检查唯一性的字段</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 插入行数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> SQLException SQL执行异常</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">insertOrUpdate</span><span class="params">(Connection conn, Entity record, String... keys)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">final</span> Entity where = record.filter(keys);</span><br><span class="line">	<span class="keyword">if</span> (MapUtil.isNotEmpty(where) &amp;&amp; count(conn, where) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> update(conn, record, where);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> insert(conn, record);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="忧化方法"><a href="#忧化方法" class="headerlink" title="忧化方法"></a>忧化方法</h2><p>创建表，注意要有一个唯一索引 new_code_index， 插入或者更新时，以此为标准</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`a`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`b`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`c`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`update_time`</span> datetime <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`create_time`</span> datetime <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> <span class="string">`new_code_index`</span> (<span class="string">`c`</span>) <span class="keyword">USING</span> BTREE</span><br><span class="line">) <span class="keyword">ENGINE</span>=MyISAM AUTO_INCREMENT=<span class="number">4</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h4 id="sql语句实例"><a href="#sql语句实例" class="headerlink" title="sql语句实例"></a>sql语句实例</h4><ul>
-<li>第一次<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">test</span> ( a, b, c, update_time, create_time ) <span class="keyword">VALUES</span> ( <span class="string">'aaaa'</span>, <span class="string">'bbb'</span>, <span class="keyword">MD5</span>(<span class="keyword">CONCAT</span>(<span class="string">'qwewq'</span>, <span class="string">'qweqw'</span>)), <span class="keyword">NOW</span>(), <span class="keyword">NOW</span>() ) <span class="keyword">ON</span> <span class="keyword">DUPLICATE</span> <span class="keyword">KEY</span> <span class="keyword">UPDATE</span> update_time = <span class="keyword">now</span>(), create_time = <span class="keyword">now</span>();</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">受影响的行: 1</span><br><span class="line">时间: 0.005s</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>第二次<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">test</span> ( a, b, c, update_time, create_time ) <span class="keyword">VALUES</span> ( <span class="string">'aaaa'</span>, <span class="string">'bbb'</span>, <span class="keyword">MD5</span>(<span class="keyword">CONCAT</span>(<span class="string">'qwewq'</span>, <span class="string">'qweqw'</span>)), <span class="keyword">NOW</span>(), <span class="keyword">NOW</span>() ) <span class="keyword">ON</span> <span class="keyword">DUPLICATE</span> <span class="keyword">KEY</span> <span class="keyword">UPDATE</span> update_time = <span class="keyword">now</span>(), create_time = <span class="keyword">now</span>();</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">受影响的行: 2</span><br><span class="line">时间: 0.005s</span><br></pre></td></tr></table></figure>
+<li><input disabled="" type="checkbox"> 分布式锁
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/31/mysql%E4%BC%98%E5%8C%96%E5%AD%A6%E4%B9%A0on%20DUPLICATE%20key%20Update/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
