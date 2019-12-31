@@ -1,243 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>flink on yarn部署</title>
-    <url>/2019/12/31/flink%20on%20yarn%E9%83%A8%E7%BD%B2/</url>
-    <content><![CDATA[<p>flink on yarn需要的组件与版本如下</p>
-<ol>
-<li>Zookeeper 3.4.9 用于做Flink的JobManager的HA服务</li>
-<li>hadoop 2.7.2 搭建HDFS和Yarn</li>
-<li>flink 1.9.1（scala 2.11）</li>
-</ol>
-<a id="more"></a>
-
-<p>Zookeeper, HDFS 和 Yarn 的组件的安装可以参照网上的教程。</p>
-<p>在zookeeper，HDFS 和Yarn的组件的安装好的前提下，在客户机上提交Flink任务，具体流程如下：</p>
-<ul>
-<li>在启动Yarn-Session 之前， 设置好HADOOP_HOME,YARN_CONF_DIR ， HADOOP_CONF_DIR环境变量中三者的一个。如下所示， 根据具体的hadoop 路径来设置（CDH和HDP不知道的话可以在机器上直接搜索）</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ export HADOOP_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;hadoop-current</span><br></pre></td></tr></table></figure>
-<ul>
-<li>配置flink 目录下的flink-conf.yaml, 如下所示<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">jobmanager.rpc.address:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">jobmanager.rpc.port:</span> <span class="number">6123</span></span><br><span class="line"><span class="attr">jobmanager.heap.mb:</span> <span class="number">256</span></span><br><span class="line"><span class="attr">taskmanager.heap.mb:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">taskmanager.numberOfTaskSlots:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">taskmanager.memory.preallocate:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">parallelism.default:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">jobmanager.web.port:</span> <span class="number">8081</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># yarn</span></span><br><span class="line"><span class="attr">yarn.maximum-failed-containers:</span> <span class="number">99999</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#akka config</span></span><br><span class="line"><span class="attr">akka.watch.heartbeat.interval:</span> <span class="number">5</span> <span class="string">s</span></span><br><span class="line"><span class="attr">akka.watch.heartbeat.pause:</span> <span class="number">20</span> <span class="string">s</span></span><br><span class="line"><span class="attr">akka.ask.timeout:</span> <span class="number">60</span> <span class="string">s</span></span><br><span class="line"><span class="attr">akka.framesize:</span> <span class="string">20971520b</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#high-avaliability</span></span><br><span class="line"><span class="attr">high-availability:</span> <span class="string">zookeeper</span></span><br><span class="line"><span class="comment">## 根据安装的zookeeper信息填写</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.quorum:</span> <span class="number">10.141</span><span class="number">.61</span><span class="number">.226</span><span class="string">:2181,10.141.53.244:2181,10.141.18.219:2181</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.path.root:</span> <span class="string">/flink</span></span><br><span class="line"><span class="comment">## HA 信息存储到HDFS的目录，根据各自的Hdfs情况修改</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.storageDir:</span> <span class="string">hdfs://hdcluster/flink/recovery/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#checkpoint config</span></span><br><span class="line"><span class="attr">state.backend:</span> <span class="string">rocksdb</span></span><br><span class="line"><span class="comment">## checkpoint到HDFS的目录 根据各自安装的HDFS情况修改</span></span><br><span class="line"><span class="attr">state.backend.fs.checkpointdir:</span> <span class="string">hdfs://hdcluster/flink/checkpoint</span></span><br><span class="line"><span class="comment">## 对外checkpoint到HDFS的目录</span></span><br><span class="line"><span class="attr">state.checkpoints.dir:</span> <span class="string">hdfs://hdcluster/flink/savepoint</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#memory config</span></span><br><span class="line"><span class="attr">env.java.opts:</span> <span class="string">-XX:+UseConcMarkSweepGC</span> <span class="string">-XX:CMSInitiatingOccupancyFraction=75</span> <span class="string">-XX:+UseCMSInitiatingOccupancyOnly</span> <span class="string">-XX:+AlwaysPreTouch</span> <span class="string">-server</span> <span class="string">-XX:+HeapDumpOnOutOfMemoryError</span></span><br><span class="line"><span class="attr">yarn.heap-cutoff-ratio:</span> <span class="number">0.2</span></span><br><span class="line"><span class="attr">taskmanager.memory.off-heap:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></li>
-<li>提交Yarn-Session，切换到flink的bin 目录下,提交命令如下<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ .&#x2F;yarn-session.sh -n 2 -s 6 -jm 3072 -tm 6144 -nm test -d</span><br></pre></td></tr></table></figure>
-启动yarn-session的参数解释如下</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>参数解释</th>
-<th>设置推荐</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-n(–container)</td>
-<td>taskmanager的数量</td>
-<td></td>
-</tr>
-<tr>
-<td>-s(–slots)</td>
-<td>用启动应用所需的slot数量/ -s 的值向上取整，有时可以多一些taskmanager，做冗余 每个taskmanager的slot数量，默认一个slot一个core，默认每个taskmanager的slot的个数为1</td>
-<td>6～10</td>
-</tr>
-<tr>
-<td>-jm</td>
-<td>jobmanager的内存（单位MB)</td>
-<td>3072</td>
-</tr>
-<tr>
-<td>-tm</td>
-<td>每个taskmanager的内存（单位MB)</td>
-<td>根据core 与内存的比例来设置，-s的值＊ （core与内存的比）来算</td>
-</tr>
-<tr>
-<td>-nm</td>
-<td>yarn 的appName(现在yarn的ui上的名字)｜</td>
-<td></td>
-</tr>
-<tr>
-<td>-d</td>
-<td>后台执行</td>
-<td></td>
-</tr>
-</tbody></table>
-<ul>
-<li>提交yarn－session 后，可以在yarn的ui上看到一个应用（应用有一个appId）, 切换到flink的bin目录下，提交flink 应用。命令如下<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ .&#x2F;flink -run file:&#x2F;&#x2F;&#x2F;home&#x2F;yarn&#x2F;test.jar -a 1 -p 12 -yid appId -nm flink-test -d</span><br></pre></td></tr></table></figure>
-启动flink 应用的参数解释如下</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>参数解释</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-j</td>
-<td>运行flink 应用的jar所在的目录</td>
-</tr>
-<tr>
-<td>-a</td>
-<td>运行flink 应用的主方法的参数</td>
-</tr>
-<tr>
-<td>-p</td>
-<td>运行flink应用的并行度</td>
-</tr>
-<tr>
-<td>-c</td>
-<td>运行flink应用的主类, 可以通过在打包设置主类</td>
-</tr>
-<tr>
-<td>-nm</td>
-<td>flink 应用名字，在flink-ui 上面展示</td>
-</tr>
-<tr>
-<td>-d</td>
-<td>后台执行</td>
-</tr>
-<tr>
-<td>–fromsavepoint</td>
-<td>flink 应用启动的状态恢复点</td>
-</tr>
-</tbody></table>
-<ul>
-<li>启动flink应用成功，即可在yarn ui 点击对应应用的ApplicationMaster链接,既可以查看flink-ui ，并查看flink 应用运行情况。</li>
-</ul>
-<p>注：在安装部署遇到任何问题，可以在小象问答，微信群以及私聊提出，我们一般会在晚上作答（由于白天要上班，作答不及时请谅解。）</p>
-]]></content>
+<search> 
+  
+  
+    
+    <entry>
+      <title>flink on yarn部署</title>
+      <link href="/2019/12/31/flink%20on%20yarn%E9%83%A8%E7%BD%B2/"/>
+      <url>/2019/12/31/flink%20on%20yarn%E9%83%A8%E7%BD%B2/</url>
+      
+        <content type="html"><![CDATA[<p>flink on yarn需要的组件与版本如下</p><ol><li>Zookeeper 3.4.9 用于做Flink的JobManager的HA服务</li><li>hadoop 2.7.2 搭建HDFS和Yarn</li><li>flink 1.9.1（scala 2.11）</li></ol><a id="more"></a><p>Zookeeper, HDFS 和 Yarn 的组件的安装可以参照网上的教程。</p><p>在zookeeper，HDFS 和Yarn的组件的安装好的前提下，在客户机上提交Flink任务，具体流程如下：</p><ul><li>在启动Yarn-Session 之前， 设置好HADOOP_HOME,YARN_CONF_DIR ， HADOOP_CONF_DIR环境变量中三者的一个。如下所示， 根据具体的hadoop 路径来设置（CDH和HDP不知道的话可以在机器上直接搜索）</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ export HADOOP_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;hadoop-current</span><br></pre></td></tr></table></figure><ul><li>配置flink 目录下的flink-conf.yaml, 如下所示<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jobmanager.rpc.address:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">jobmanager.rpc.port:</span> <span class="number">6123</span></span><br><span class="line"><span class="attr">jobmanager.heap.mb:</span> <span class="number">256</span></span><br><span class="line"><span class="attr">taskmanager.heap.mb:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">taskmanager.numberOfTaskSlots:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">taskmanager.memory.preallocate:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">parallelism.default:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">jobmanager.web.port:</span> <span class="number">8081</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># yarn</span></span><br><span class="line"><span class="attr">yarn.maximum-failed-containers:</span> <span class="number">99999</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#akka config</span></span><br><span class="line"><span class="attr">akka.watch.heartbeat.interval:</span> <span class="number">5</span> <span class="string">s</span></span><br><span class="line"><span class="attr">akka.watch.heartbeat.pause:</span> <span class="number">20</span> <span class="string">s</span></span><br><span class="line"><span class="attr">akka.ask.timeout:</span> <span class="number">60</span> <span class="string">s</span></span><br><span class="line"><span class="attr">akka.framesize:</span> <span class="string">20971520b</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#high-avaliability</span></span><br><span class="line"><span class="attr">high-availability:</span> <span class="string">zookeeper</span></span><br><span class="line"><span class="comment">## 根据安装的zookeeper信息填写</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.quorum:</span> <span class="string">****:2181,****:2181,****:2181</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.path.root:</span> <span class="string">/flink</span></span><br><span class="line"><span class="comment">## HA 信息存储到HDFS的目录，根据各自的Hdfs情况修改</span></span><br><span class="line"><span class="attr">high-availability.zookeeper.storageDir:</span> <span class="string">hdfs://hdcluster/flink/recovery/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#checkpoint config</span></span><br><span class="line"><span class="attr">state.backend:</span> <span class="string">rocksdb</span></span><br><span class="line"><span class="comment">## checkpoint到HDFS的目录 根据各自安装的HDFS情况修改</span></span><br><span class="line"><span class="attr">state.backend.fs.checkpointdir:</span> <span class="string">hdfs://hdcluster/flink/checkpoint</span></span><br><span class="line"><span class="comment">## 对外checkpoint到HDFS的目录</span></span><br><span class="line"><span class="attr">state.checkpoints.dir:</span> <span class="string">hdfs://hdcluster/flink/savepoint</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#memory config</span></span><br><span class="line"><span class="attr">env.java.opts:</span> <span class="string">-XX:+UseConcMarkSweepGC</span> <span class="string">-XX:CMSInitiatingOccupancyFraction=75</span> <span class="string">-XX:+UseCMSInitiatingOccupancyOnly</span> <span class="string">-XX:+AlwaysPreTouch</span> <span class="string">-server</span> <span class="string">-XX:+HeapDumpOnOutOfMemoryError</span></span><br><span class="line"><span class="attr">yarn.heap-cutoff-ratio:</span> <span class="number">0.2</span></span><br><span class="line"><span class="attr">taskmanager.memory.off-heap:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></li><li>提交Yarn-Session，切换到flink的bin 目录下,提交命令如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ .&#x2F;yarn-session.sh -n 2 -s 6 -jm 3072 -tm 6144 -nm test -d</span><br></pre></td></tr></table></figure>启动yarn-session的参数解释如下</li></ul><table><thead><tr><th>参数</th><th>参数解释</th><th>设置推荐</th></tr></thead><tbody><tr><td>-n(–container)</td><td>taskmanager的数量</td><td></td></tr><tr><td>-s(–slots)</td><td>用启动应用所需的slot数量/ -s 的值向上取整，有时可以多一些taskmanager，做冗余 每个taskmanager的slot数量，默认一个slot一个core，默认每个taskmanager的slot的个数为1</td><td>6～10</td></tr><tr><td>-jm</td><td>jobmanager的内存（单位MB)</td><td>3072</td></tr><tr><td>-tm</td><td>每个taskmanager的内存（单位MB)</td><td>根据core 与内存的比例来设置，-s的值＊ （core与内存的比）来算</td></tr><tr><td>-nm</td><td>yarn 的appName(现在yarn的ui上的名字)｜</td><td></td></tr><tr><td>-d</td><td>后台执行</td><td></td></tr></tbody></table><ul><li>提交yarn－session 后，可以在yarn的ui上看到一个应用（应用有一个appId）, 切换到flink的bin目录下，提交flink 应用。命令如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ .&#x2F;flink -run file:&#x2F;&#x2F;&#x2F;home&#x2F;yarn&#x2F;test.jar -a 1 -p 12 -yid appId -nm flink-test -d</span><br></pre></td></tr></table></figure>启动flink 应用的参数解释如下</li></ul><table><thead><tr><th>参数</th><th>参数解释</th></tr></thead><tbody><tr><td>-j</td><td>运行flink 应用的jar所在的目录</td></tr><tr><td>-a</td><td>运行flink 应用的主方法的参数</td></tr><tr><td>-p</td><td>运行flink应用的并行度</td></tr><tr><td>-c</td><td>运行flink应用的主类, 可以通过在打包设置主类</td></tr><tr><td>-nm</td><td>flink 应用名字，在flink-ui 上面展示</td></tr><tr><td>-d</td><td>后台执行</td></tr><tr><td>–fromsavepoint</td><td>flink 应用启动的状态恢复点</td></tr></tbody></table><ul><li>启动flink应用成功，即可在yarn ui 点击对应应用的ApplicationMaster链接,既可以查看flink-ui ，并查看flink 应用运行情况。</li></ul><p>注：在安装部署遇到任何问题，可以在小象问答，微信群以及私聊提出，我们一般会在晚上作答（由于白天要上班，作答不及时请谅解。）</p>]]></content>
+      
+      
       <categories>
-        <category>flink</category>
+          
+          <category> flink </category>
+          
       </categories>
-      <tags>
-        <tag>flink</tag>
-        <tag>yarn</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mysql优化on DUPLICATE key Update</title>
-    <url>/2019/12/31/mysql%E4%BC%98%E5%8C%96on%20DUPLICATE%20key%20Update/</url>
-    <content><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>有张表，里面的记录不能存在重复记录，记录存在就更新，如果不存在就插入，分布式并发场景下会存在以下问题：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"> Duplicate entry '1203923435854168066-139-68' for key 'PRIMARY'</span><br></pre></td></tr></table></figure>
-
-<hr>
-<ul>
-<li><strong>解决方案</strong></li>
-<li><input checked="" disabled="" type="checkbox"> DUPLICATE key Update（本文重点）</li>
-<li><input disabled="" type="checkbox"> 分布式锁<a id="more"></a>
-</li>
-</ul>
-<hr>
-<ul>
-<li><strong>传统做法</strong></li>
-</ul>
-<p>两条sql语句，对于大并发来说，存在性能问题。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入或更新数据</span></span><br><span class="line"><span class="comment"> * 此方法不会关闭Connection</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> conn   数据库连接</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> record 记录</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> keys   需要检查唯一性的字段</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 插入行数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> SQLException SQL执行异常</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">insertOrUpdate</span><span class="params">(Connection conn, Entity record, String... keys)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">final</span> Entity where = record.filter(keys);</span><br><span class="line">	<span class="keyword">if</span> (MapUtil.isNotEmpty(where) &amp;&amp; count(conn, where) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> update(conn, record, where);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> insert(conn, record);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h2><p>创建表，注意要有一个唯一索引 new_code_index， 插入或者更新时，以此为标准</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`a`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`b`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`c`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`update_time`</span> datetime <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`create_time`</span> datetime <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> <span class="string">`new_code_index`</span> (<span class="string">`c`</span>) <span class="keyword">USING</span> BTREE</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="sql语句实例"><a href="#sql语句实例" class="headerlink" title="sql语句实例"></a>sql语句实例</h3><h4 id="第一次"><a href="#第一次" class="headerlink" title="第一次"></a>第一次</h4><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">test</span> ( a, b, c, update_time, create_time ) <span class="keyword">VALUES</span> ( <span class="string">'aaaa'</span>, <span class="string">'bbb'</span>, <span class="keyword">MD5</span>(<span class="keyword">CONCAT</span>(<span class="string">'qwewq'</span>, <span class="string">'qweqw'</span>)), <span class="keyword">NOW</span>(), <span class="keyword">NOW</span>() ) </span><br><span class="line"><span class="keyword">ON</span> <span class="keyword">DUPLICATE</span> <span class="keyword">KEY</span> <span class="keyword">UPDATE</span> update_time = <span class="keyword">now</span>(), create_time = <span class="keyword">now</span>();</span><br><span class="line"></span><br><span class="line">受影响的行: 1</span><br><span class="line">时间: 0.005s</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="第二次"><a href="#第二次" class="headerlink" title="第二次"></a>第二次</h4><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">test</span> ( a, b, c, update_time, create_time ) <span class="keyword">VALUES</span> ( <span class="string">'aaaa'</span>, <span class="string">'bbb'</span>, <span class="keyword">MD5</span>(<span class="keyword">CONCAT</span>(<span class="string">'qwewq'</span>, <span class="string">'qweqw'</span>)), <span class="keyword">NOW</span>(), <span class="keyword">NOW</span>() ) </span><br><span class="line"><span class="keyword">ON</span> <span class="keyword">DUPLICATE</span> <span class="keyword">KEY</span> <span class="keyword">UPDATE</span> update_time = <span class="keyword">now</span>(), create_time = <span class="keyword">now</span>();</span><br><span class="line"></span><br><span class="line">受影响的行: 2</span><br><span class="line">时间: 0.005s</span><br></pre></td></tr></table></figure>
-
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> flink </tag>
+            
+            <tag> yarn </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>mysql优化on DUPLICATE key Update</title>
+      <link href="/2019/12/31/mysql%E4%BC%98%E5%8C%96on%20DUPLICATE%20key%20Update/"/>
+      <url>/2019/12/31/mysql%E4%BC%98%E5%8C%96on%20DUPLICATE%20key%20Update/</url>
+      
+        <content type="html"><![CDATA[<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>有张表，里面的记录不能存在重复记录，记录存在就更新，如果不存在就插入，分布式并发场景下会存在以下问题：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> Duplicate entry '1203923435854168066-139-68' for key 'PRIMARY'</span><br></pre></td></tr></table></figure><hr><ul><li><strong>解决方案</strong></li><li><input checked="" disabled="" type="checkbox"> DUPLICATE key Update（本文重点）</li><li><input disabled="" type="checkbox"> 分布式锁<a id="more"></a></li></ul><hr><ul><li><strong>传统做法</strong></li></ul><p>两条sql语句，对于大并发来说，存在性能问题。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入或更新数据</span></span><br><span class="line"><span class="comment"> * 此方法不会关闭Connection</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> conn   数据库连接</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> record 记录</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> keys   需要检查唯一性的字段</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 插入行数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> SQLException SQL执行异常</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">insertOrUpdate</span><span class="params">(Connection conn, Entity record, String... keys)</span> </span>&#123;</span><br><span class="line"><span class="keyword">final</span> Entity where = record.filter(keys);</span><br><span class="line"><span class="keyword">if</span> (MapUtil.isNotEmpty(where) &amp;&amp; count(conn, where) &gt; <span class="number">0</span>) &#123;</span><br><span class="line"><span class="keyword">return</span> update(conn, record, where);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="keyword">return</span> insert(conn, record);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><hr><h2 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h2><p>创建表，注意要有一个唯一索引 new_code_index， 插入或者更新时，以此为标准</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`a`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`b`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`c`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`update_time`</span> datetime <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`create_time`</span> datetime <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> <span class="string">`new_code_index`</span> (<span class="string">`c`</span>) <span class="keyword">USING</span> BTREE</span><br><span class="line">);</span><br></pre></td></tr></table></figure><hr><h3 id="sql语句实例"><a href="#sql语句实例" class="headerlink" title="sql语句实例"></a>sql语句实例</h3><h4 id="第一次"><a href="#第一次" class="headerlink" title="第一次"></a>第一次</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">test</span> ( a, b, c, update_time, create_time ) <span class="keyword">VALUES</span> ( <span class="string">'aaaa'</span>, <span class="string">'bbb'</span>, <span class="keyword">MD5</span>(<span class="keyword">CONCAT</span>(<span class="string">'qwewq'</span>, <span class="string">'qweqw'</span>)), <span class="keyword">NOW</span>(), <span class="keyword">NOW</span>() ) </span><br><span class="line"><span class="keyword">ON</span> <span class="keyword">DUPLICATE</span> <span class="keyword">KEY</span> <span class="keyword">UPDATE</span> update_time = <span class="keyword">now</span>(), create_time = <span class="keyword">now</span>();</span><br><span class="line"></span><br><span class="line">受影响的行: 1</span><br><span class="line">时间: 0.005s</span><br></pre></td></tr></table></figure><h4 id="第二次"><a href="#第二次" class="headerlink" title="第二次"></a>第二次</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">test</span> ( a, b, c, update_time, create_time ) <span class="keyword">VALUES</span> ( <span class="string">'aaaa'</span>, <span class="string">'bbb'</span>, <span class="keyword">MD5</span>(<span class="keyword">CONCAT</span>(<span class="string">'qwewq'</span>, <span class="string">'qweqw'</span>)), <span class="keyword">NOW</span>(), <span class="keyword">NOW</span>() ) </span><br><span class="line"><span class="keyword">ON</span> <span class="keyword">DUPLICATE</span> <span class="keyword">KEY</span> <span class="keyword">UPDATE</span> update_time = <span class="keyword">now</span>(), create_time = <span class="keyword">now</span>();</span><br><span class="line"></span><br><span class="line">受影响的行: 2</span><br><span class="line">时间: 0.005s</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
       <categories>
-        <category>mysql</category>
+          
+          <category> mysql </category>
+          
       </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2017/05/26/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> mysql </tag>
+            
+            <tag> 优化 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2017/05/26/hello-world/"/>
+      <url>/2017/05/26/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><a id="more"></a><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+      
+      
       <categories>
-        <category>flink</category>
+          
+          <category> flink </category>
+          
       </categories>
-      <tags>
-        <tag>nginx</tag>
-        <tag>MQ</tag>
-        <tag>Neo4J</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Changelog</title>
-    <url>/2017/05/26/Changelog/</url>
-    <content><![CDATA[<h2 id="4-5-4"><a href="#4-5-4" class="headerlink" title="4.5.4"></a>4.5.4</h2><h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><ul>
-<li>【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包</li>
-<li>【core】     FileUtil增加isSub方法（pr#39@Gitee）<a id="more"></a></li>
-<li>【core】     增加VoidFunc</li>
-<li>【extra】     mail适配mail.setting和config/mail.setting双配置文件（感谢@【江门】小草哥）</li>
-<li>【corn】     cron适配cron.setting和config/cron.setting双配置文件（感谢@【江门】小草哥）</li>
-<li>【poi】       ExcelWriter增加autoSizeColumnAll方法，ExcelBase增加getColumnCount、getRowCount方法（感谢@@【长沙】M）</li>
-<li>【http】      添加SoapClient，删除SoapRequest</li>
-</ul>
-<h3 id="Bug修复"><a href="#Bug修复" class="headerlink" title="Bug修复"></a>Bug修复</h3><ul>
-<li>【db】        修复Session中事务问题（issue#IUQMN@Gitee）</li>
-<li>【db】        修复Db中关闭逻辑错误导致的事务问题（感谢@【宁波】mojie126）</li>
-<li>【http】      修复form方法使用Resource可能导致的空指针问题</li>
-<li>【crypto】   修复SM2Engine逻辑错误（感谢bcgit/bc-java）</li>
-</ul>
-<hr>
-<h2 id="4-5-4-1"><a href="#4-5-4-1" class="headerlink" title="4.5.4"></a>4.5.4</h2><h3 id="新特性-1"><a href="#新特性-1" class="headerlink" title="新特性"></a>新特性</h3><ul>
-<li>【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包</li>
-<li>【core】     FileUtil增加isSub方法（pr#39@Gitee）</li>
-<li>【core】     增加VoidFunc</li>
-<li>【extra】     mail适配mail.setting和config/mail.setting双配置文件（感谢@【江门】小草哥）</li>
-<li>【corn】     cron适配cron.setting和config/cron.setting双配置文件（感谢@【江门】小草哥）</li>
-<li>【poi】       ExcelWriter增加autoSizeColumnAll方法，ExcelBase增加getColumnCount、getRowCount方法（感谢@@【长沙】M）</li>
-<li>【http】      添加SoapClient，删除SoapRequest</li>
-</ul>
-<h3 id="Bug修复-1"><a href="#Bug修复-1" class="headerlink" title="Bug修复"></a>Bug修复</h3><ul>
-<li>【db】        修复Session中事务问题（issue#IUQMN@Gitee）</li>
-<li>【db】        修复Db中关闭逻辑错误导致的事务问题（感谢@【宁波】mojie126）</li>
-<li>【http】      修复form方法使用Resource可能导致的空指针问题</li>
-<li>【crypto】   修复SM2Engine逻辑错误（感谢bcgit/bc-java）</li>
-</ul>
-<hr>
-<h2 id="4-5-3"><a href="#4-5-3" class="headerlink" title="4.5.3"></a>4.5.3</h2><h3 id="新特性-2"><a href="#新特性-2" class="headerlink" title="新特性"></a>新特性</h3><ul>
-<li>【core】       Simhash添加读写锁（issue#IUF9O@Gitee）</li>
-<li>【core】       Img增加round方法，圆角给定图片</li>
-<li>【extra】      二维码中的图片做圆角处理</li>
-<li>【core】       CsvData实现Iterable接口</li>
-<li>【extra】      Ftp增加重连方法（pr#38@Gitee）</li>
-<li>【extra】      Velocity升级至2.x，不再兼容1.7</li>
-</ul>
-<h3 id="Bug修复-2"><a href="#Bug修复-2" class="headerlink" title="Bug修复"></a>Bug修复</h3><ul>
-<li>【core】       修复ReflectUtil新建Map对象错误问题（issue#IUF9O@Gitee）</li>
-<li>【core】       修复ImgUtil字体为null导致的空指针问题（issue#IUF3X@Gitee）</li>
-<li>【extra】      修复Ftp中文件上传mkdirs方法创建多余文件夹的问题（issue#ITAYV@Gitee）</li>
-<li>【extra】      修复Ftp中文件上传mkdirs方法创建多余文件夹的问题（issue#ITAYV@Gitee）</li>
-</ul>
-<hr>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> nginx </tag>
+            
+            <tag> MQ </tag>
+            
+            <tag> Neo4J </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Changelog</title>
+      <link href="/2017/05/26/Changelog/"/>
+      <url>/2017/05/26/Changelog/</url>
+      
+        <content type="html"><![CDATA[<h2 id="4-5-4"><a href="#4-5-4" class="headerlink" title="4.5.4"></a>4.5.4</h2><h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><ul><li>【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包</li><li>【core】     FileUtil增加isSub方法（pr#39@Gitee）<a id="more"></a></li><li>【core】     增加VoidFunc</li><li>【extra】     mail适配mail.setting和config/mail.setting双配置文件（感谢@【江门】小草哥）</li><li>【corn】     cron适配cron.setting和config/cron.setting双配置文件（感谢@【江门】小草哥）</li><li>【poi】       ExcelWriter增加autoSizeColumnAll方法，ExcelBase增加getColumnCount、getRowCount方法（感谢@@【长沙】M）</li><li>【http】      添加SoapClient，删除SoapRequest</li></ul><h3 id="Bug修复"><a href="#Bug修复" class="headerlink" title="Bug修复"></a>Bug修复</h3><ul><li>【db】        修复Session中事务问题（issue#IUQMN@Gitee）</li><li>【db】        修复Db中关闭逻辑错误导致的事务问题（感谢@【宁波】mojie126）</li><li>【http】      修复form方法使用Resource可能导致的空指针问题</li><li>【crypto】   修复SM2Engine逻辑错误（感谢bcgit/bc-java）</li></ul><hr><h2 id="4-5-4-1"><a href="#4-5-4-1" class="headerlink" title="4.5.4"></a>4.5.4</h2><h3 id="新特性-1"><a href="#新特性-1" class="headerlink" title="新特性"></a>新特性</h3><ul><li>【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包</li><li>【core】     FileUtil增加isSub方法（pr#39@Gitee）</li><li>【core】     增加VoidFunc</li><li>【extra】     mail适配mail.setting和config/mail.setting双配置文件（感谢@【江门】小草哥）</li><li>【corn】     cron适配cron.setting和config/cron.setting双配置文件（感谢@【江门】小草哥）</li><li>【poi】       ExcelWriter增加autoSizeColumnAll方法，ExcelBase增加getColumnCount、getRowCount方法（感谢@@【长沙】M）</li><li>【http】      添加SoapClient，删除SoapRequest</li></ul><h3 id="Bug修复-1"><a href="#Bug修复-1" class="headerlink" title="Bug修复"></a>Bug修复</h3><ul><li>【db】        修复Session中事务问题（issue#IUQMN@Gitee）</li><li>【db】        修复Db中关闭逻辑错误导致的事务问题（感谢@【宁波】mojie126）</li><li>【http】      修复form方法使用Resource可能导致的空指针问题</li><li>【crypto】   修复SM2Engine逻辑错误（感谢bcgit/bc-java）</li></ul><hr><h2 id="4-5-3"><a href="#4-5-3" class="headerlink" title="4.5.3"></a>4.5.3</h2><h3 id="新特性-2"><a href="#新特性-2" class="headerlink" title="新特性"></a>新特性</h3><ul><li>【core】       Simhash添加读写锁（issue#IUF9O@Gitee）</li><li>【core】       Img增加round方法，圆角给定图片</li><li>【extra】      二维码中的图片做圆角处理</li><li>【core】       CsvData实现Iterable接口</li><li>【extra】      Ftp增加重连方法（pr#38@Gitee）</li><li>【extra】      Velocity升级至2.x，不再兼容1.7</li></ul><h3 id="Bug修复-2"><a href="#Bug修复-2" class="headerlink" title="Bug修复"></a>Bug修复</h3><ul><li>【core】       修复ReflectUtil新建Map对象错误问题（issue#IUF9O@Gitee）</li><li>【core】       修复ImgUtil字体为null导致的空指针问题（issue#IUF3X@Gitee）</li><li>【extra】      修复Ftp中文件上传mkdirs方法创建多余文件夹的问题（issue#ITAYV@Gitee）</li><li>【extra】      修复Ftp中文件上传mkdirs方法创建多余文件夹的问题（issue#ITAYV@Gitee）</li></ul><hr>]]></content>
+      
+      
       <categories>
-        <category>spark</category>
+          
+          <category> spark </category>
+          
       </categories>
-      <tags>
-        <tag>hive</tag>
-        <tag>hbase</tag>
-        <tag>kafka</tag>
-      </tags>
-  </entry>
+      
+      
+        <tags>
+            
+            <tag> hive </tag>
+            
+            <tag> hbase </tag>
+            
+            <tag> kafka </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
 </search>
