@@ -3,7 +3,7 @@
   <entry>
     <title>flink on yarn部署</title>
     <url>/2019/12/31/flink%20on%20yarn%E9%83%A8%E7%BD%B2/</url>
-    <content><![CDATA[<h2 id="flink-on-yarn部署"><a href="#flink-on-yarn部署" class="headerlink" title="flink on yarn部署"></a>flink on yarn部署</h2><p>flink on yarn需要的组件与版本如下</p>
+    <content><![CDATA[<p>flink on yarn需要的组件与版本如下</p>
 <ol>
 <li>Zookeeper 3.4.9 用于做Flink的JobManager的HA服务</li>
 <li>hadoop 2.7.2 搭建HDFS和Yarn</li>
