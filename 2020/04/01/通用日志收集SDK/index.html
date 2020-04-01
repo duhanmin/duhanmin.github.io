@@ -48,28 +48,30 @@
   };
 </script>
 
-  <meta name="description" content="永不止步的深思与拷问">
-<meta property="og:type" content="website">
-<meta property="og:title" content="野鹿">
-<meta property="og:url" content="https://duhanmin.github.io/index.html">
+  <meta name="description" content="前言该项目可用于java、spark和hadoop项目的运行日志转发到kafka 工程中的日志通过该SDK收集发送到kafka，通过logstash收集到ES，通过kibana建立项目日志索引区分查看 操作方法Spark on Yarn 日志接入ES1234--jars  libs&#x2F;kafka-clients-1.0.1.3.0.0.0-1634.jar,  \--files spark-log4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通用日志收集SDK">
+<meta property="og:url" content="https://duhanmin.github.io/2020/04/01/%E9%80%9A%E7%94%A8%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86SDK/index.html">
 <meta property="og:site_name" content="野鹿">
-<meta property="og:description" content="永不止步的深思与拷问">
+<meta property="og:description" content="前言该项目可用于java、spark和hadoop项目的运行日志转发到kafka 工程中的日志通过该SDK收集发送到kafka，通过logstash收集到ES，通过kibana建立项目日志索引区分查看 操作方法Spark on Yarn 日志接入ES1234--jars  libs&#x2F;kafka-clients-1.0.1.3.0.0.0-1634.jar,  \--files spark-log4">
+<meta property="article:published_time" content="2020-04-01T07:05:14.255Z">
+<meta property="article:modified_time" content="2020-04-01T07:06:51.624Z">
 <meta property="article:author" content="杜函敏">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://duhanmin.github.io/">
+<link rel="canonical" href="https://duhanmin.github.io/2020/04/01/%E9%80%9A%E7%94%A8%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86SDK/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
-    isPost: false
+    isHome: false,
+    isPost: true
   };
 </script>
 
-  <title>野鹿</title>
+  <title>通用日志收集SDK | 野鹿</title>
   
 
 
@@ -211,10 +213,10 @@
             
 
   <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zs-Hans">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zs-Hans">
     <link itemprop="mainEntityOfPage" href="https://duhanmin.github.io/2020/04/01/%E9%80%9A%E7%94%A8%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86SDK/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -228,8 +230,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/01/%E9%80%9A%E7%94%A8%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86SDK/" class="post-title-link" itemprop="url">通用日志收集SDK</a>
+          通用日志收集SDK
         </h1>
 
         <div class="post-meta">
@@ -244,6 +245,13 @@
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
 
         </div>
       </header>
@@ -254,7 +262,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该项目可用于java、spark和hadoop项目的运行日志转发到kafka</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该项目可用于java、spark和hadoop项目的运行日志转发到kafka</p>
 <p>工程中的日志通过该SDK收集发送到kafka，通过logstash收集到ES，通过kibana建立项目日志索引区分查看</p>
 <h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><h3 id="Spark-on-Yarn-日志接入ES"><a href="#Spark-on-Yarn-日志接入ES" class="headerlink" title="Spark on Yarn 日志接入ES"></a>Spark on Yarn 日志接入ES</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--jars  libs/kafka-clients-1.0.1.3.0.0.0-1634.jar,  \</span><br><span class="line">--files spark-log4j.properties,  \</span><br><span class="line">--conf spark.driver.extraJavaOptions="-Dlog4j.configuration=spark-log4j.properties" \</span><br><span class="line">--conf spark.executor.extraJavaOptions="-Dlog4j.configuration=spark-log4j.properties" \</span><br></pre></td></tr></table></figure>
 
@@ -280,428 +288,64 @@
 <p>logstash配置</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">    kafka &#123;</span><br><span class="line">        bootstrap_servers =&gt; ["hadoop001.idc01.psjy.com.pro:9092,hadoop002.idc01.psjy.com.pro:9092,hadoop003.idc01.psjy.com.pro:9092,hadoop004.idc01.psjy.com.pro:9092,hadoop005.idc01.psjy.com.pro:9092"]</span><br><span class="line">        group_id =&gt; "es-transfer"</span><br><span class="line">        topics =&gt; ["HOTWHEELS-REALTIME_LOG"]</span><br><span class="line">        consumer_threads =&gt; 5</span><br><span class="line">        decorate_events =&gt; true</span><br><span class="line">        codec =&gt; "json"</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">    elasticsearch &#123;</span><br><span class="line">        hosts =&gt; ["hadoop005.idc01.psjy.com.pro:9200","hadoop004.idc01.psjy.com.pro:9200"]</span><br><span class="line">        codec =&gt; "json"</span><br><span class="line">        index =&gt; "%&#123;eventChannel&#125;"</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-      
     </div>
 
     
     
     
+        <div class="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="杜函敏 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="杜函敏 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>杜函敏
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://duhanmin.github.io/2020/04/01/%E9%80%9A%E7%94%A8%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86SDK/" title="通用日志收集SDK">https://duhanmin.github.io/2020/04/01/通用日志收集SDK/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zs-Hans" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
         
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zs-Hans">
-    <link itemprop="mainEntityOfPage" href="https://duhanmin.github.io/2020/03/25/Centos7%E4%BD%BF%E7%94%A8CDH6.3.X%E5%AE%89%E8%A3%85%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%9B%86%E7%BE%A4/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/tx.jpg">
-      <meta itemprop="name" content="杜函敏">
-      <meta itemprop="description" content="永不止步的深思与拷问">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="野鹿">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/25/Centos7%E4%BD%BF%E7%94%A8CDH6.3.X%E5%AE%89%E8%A3%85%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%9B%86%E7%BE%A4/" class="post-title-link" itemprop="url">Centos7使用CDH6.3.X安装大数据集群</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-03-25 16:54:29 / 修改时间：17:38:53" itemprop="dateCreated datePublished" datetime="2020-03-25T16:54:29+08:00">2020-03-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CDH/" itemprop="url" rel="index">
-                    <span itemprop="name">CDH</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="修改网络和主机名"><a href="#修改网络和主机名" class="headerlink" title="修改网络和主机名"></a>修改网络和主机名</h2><p>cdh6-master</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@cdh6-master ~]# hostnamectl set-hostname cdh6-master</span><br><span class="line"></span><br><span class="line">[root@cdh6-master ~]# vi /etc/sysconfig/network-scripts/ifcfg-ens33</span><br><span class="line">TYPE=Ethernet</span><br><span class="line">PROXY_METHOD=none</span><br><span class="line">BROWSER_ONLY=no</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">DEFROUTE=yes</span><br><span class="line">IPV4_FAILURE_FATAL=no</span><br><span class="line">IPV6INIT=yes</span><br><span class="line">IPV6_AUTOCONF=yes</span><br><span class="line">IPV6_DEFROUTE=yes</span><br><span class="line">IPV6_FAILURE_FATAL=no</span><br><span class="line">IPV6_ADDR_GEN_MODE=stable-privacy</span><br><span class="line">NAME=ens33</span><br><span class="line">UUID=bdf6fb11-50f4-403a-8ba6-b9dca61a591e</span><br><span class="line">DEVICE=ens33</span><br><span class="line">ONBOOT=yes</span><br><span class="line"></span><br><span class="line">IPADDR=192.168.200.101</span><br><span class="line">NETMASK=255.255.255.0</span><br><span class="line">GATEWAY=192.168.200.2</span><br><span class="line">DNS1=8.8.8.8</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/03/25/Centos7%E4%BD%BF%E7%94%A8CDH6.3.X%E5%AE%89%E8%A3%85%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%9B%86%E7%BE%A4/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/25/Centos7%E4%BD%BF%E7%94%A8CDH6.3.X%E5%AE%89%E8%A3%85%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%9B%86%E7%BE%A4/" rel="prev" title="Centos7使用CDH6.3.X安装大数据集群">
+      <i class="fa fa-chevron-left"></i> Centos7使用CDH6.3.X安装大数据集群
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zs-Hans">
-    <link itemprop="mainEntityOfPage" href="https://duhanmin.github.io/2019/12/31/flink%20on%20yarn%E9%83%A8%E7%BD%B2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/tx.jpg">
-      <meta itemprop="name" content="杜函敏">
-      <meta itemprop="description" content="永不止步的深思与拷问">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="野鹿">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/12/31/flink%20on%20yarn%E9%83%A8%E7%BD%B2/" class="post-title-link" itemprop="url">flink on yarn部署</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2019-12-31 11:22:29 / 修改时间：14:31:41" itemprop="dateCreated datePublished" datetime="2019-12-31T11:22:29+08:00">2019-12-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/flink/" itemprop="url" rel="index">
-                    <span itemprop="name">flink</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>flink on yarn需要的组件与版本如下</p>
-<ol>
-<li>Zookeeper 3.4.9 用于做Flink的JobManager的HA服务</li>
-<li>hadoop 2.7.2 搭建HDFS和Yarn</li>
-<li>flink 1.9.1（scala 2.11）</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/12/31/flink%20on%20yarn%E9%83%A8%E7%BD%B2/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zs-Hans">
-    <link itemprop="mainEntityOfPage" href="https://duhanmin.github.io/2019/12/31/mysql%E4%BC%98%E5%8C%96on%20DUPLICATE%20key%20Update/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/tx.jpg">
-      <meta itemprop="name" content="杜函敏">
-      <meta itemprop="description" content="永不止步的深思与拷问">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="野鹿">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/12/31/mysql%E4%BC%98%E5%8C%96on%20DUPLICATE%20key%20Update/" class="post-title-link" itemprop="url">mysql优化on DUPLICATE key Update</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2019-12-31 10:54:29 / 修改时间：11:24:55" itemprop="dateCreated datePublished" datetime="2019-12-31T10:54:29+08:00">2019-12-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>有张表，里面的记录不能存在重复记录，记录存在就更新，如果不存在就插入，分布式并发场景下会存在以下问题：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> Duplicate entry '1203923435854168066-139-68' for key 'PRIMARY'</span><br></pre></td></tr></table></figure>
-
-<hr>
-<ul>
-<li><strong>解决方案</strong></li>
-<li><input checked="" disabled="" type="checkbox"> DUPLICATE key Update（本文重点）</li>
-<li><input disabled="" type="checkbox"> 分布式锁
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/12/31/mysql%E4%BC%98%E5%8C%96on%20DUPLICATE%20key%20Update/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zs-Hans">
-    <link itemprop="mainEntityOfPage" href="https://duhanmin.github.io/2017/05/26/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/tx.jpg">
-      <meta itemprop="name" content="杜函敏">
-      <meta itemprop="description" content="永不止步的深思与拷问">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="野鹿">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/05/26/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-05-26 12:12:57" itemprop="dateCreated datePublished" datetime="2017-05-26T12:12:57+08:00">2017-05-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-30 04:53:17" itemprop="dateModified" datetime="2019-12-30T04:53:17+08:00">2019-12-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/flink/" itemprop="url" rel="index">
-                    <span itemprop="name">flink</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/05/26/hello-world/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zs-Hans">
-    <link itemprop="mainEntityOfPage" href="https://duhanmin.github.io/2017/05/26/Changelog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/tx.jpg">
-      <meta itemprop="name" content="杜函敏">
-      <meta itemprop="description" content="永不止步的深思与拷问">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="野鹿">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/05/26/Changelog/" class="post-title-link" itemprop="url">Changelog</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-05-26 12:12:57" itemprop="dateCreated datePublished" datetime="2017-05-26T12:12:57+08:00">2017-05-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-30 04:55:37" itemprop="dateModified" datetime="2019-12-30T04:55:37+08:00">2019-12-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spark/" itemprop="url" rel="index">
-                    <span itemprop="name">spark</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="4-5-4"><a href="#4-5-4" class="headerlink" title="4.5.4"></a>4.5.4</h2><h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><ul>
-<li>【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包</li>
-<li>【core】     FileUtil增加isSub方法（pr#39@Gitee）
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/05/26/Changelog/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
   </article>
   
   
@@ -709,12 +353,10 @@
 
   </div>
 
-  
-
-
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -761,6 +403,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作方法"><span class="nav-number">2.</span> <span class="nav-text">操作方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-on-Yarn-日志接入ES"><span class="nav-number">2.1.</span> <span class="nav-text">Spark on Yarn 日志接入ES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java、Spring、Spark、Flink接入日志方式类似"><span class="nav-number">2.2.</span> <span class="nav-text">Java、Spring、Spark、Flink接入日志方式类似</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#logback方式配置模板"><span class="nav-number">2.3.</span> <span class="nav-text">logback方式配置模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#log4j方式配置模板"><span class="nav-number">2.4.</span> <span class="nav-text">log4j方式配置模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Maven引入Jar包"><span class="nav-number">2.5.</span> <span class="nav-text">Maven引入Jar包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">3.</span> <span class="nav-text">附录</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -930,6 +573,25 @@ if (document.querySelectorAll('pre.mermaid').length) {
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '9659570927973b3f59b3',
+      clientSecret: '513b039099389427b6101597d33c252e227ef231',
+      repo: 'duhanmin.github.io',
+      owner: 'duhanmin',
+      admin: ['duhanmin'],
+      id: '7af03c9e98122004876c924c9bc2e42f',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
   
   <script type="text/javascript" src="/js/dynamic_bg.js"></script>
