@@ -718,7 +718,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-03 16:12:53" itemprop="dateModified" datetime="2020-04-03T16:12:53+08:00">2020-04-03</time>
+                <time title="修改时间：2020-04-03 16:22:43" itemprop="dateModified" datetime="2020-04-03T16:22:43+08:00">2020-04-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -748,20 +748,20 @@
 <h2 id="需要注意"><a href="#需要注意" class="headerlink" title="需要注意"></a>需要注意</h2><p>由于dlib新版API只支持python3.6，在其他版本的python环境中需要进行重构<br><br>对人脸切割部分代码进行以下的重构</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cutting_position = (d.left(), d.top(), d.right(), d.bottom())</span><br><span class="line"><span class="comment"># 切割出人脸</span></span><br><span class="line">im = Image.open(path)</span><br><span class="line">region = im.crop(cutting_position)</span><br><span class="line"><span class="comment"># 人脸缩放</span></span><br><span class="line">a = <span class="number">500</span>  <span class="comment"># 人脸方格大小</span></span><br><span class="line"><span class="keyword">if</span> region.size[<span class="number">0</span>] &gt;= a <span class="keyword">or</span> region.size[<span class="number">1</span>] &gt;= a:</span><br><span class="line">    region.thumbnail((a, a), Image.ANTIALIAS)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    region = region.resize((a, a), Image.ANTIALIAS)</span><br><span class="line"><span class="comment"># 将Image转化为cv2</span></span><br><span class="line">region = cv2.cvtColor(np.asarray(region), cv2.COLOR_RGB2BGR)</span><br><span class="line"><span class="comment"># 保存人脸</span></span><br><span class="line">cv2.imshow(<span class="string">'region'</span>, region)</span><br><span class="line">print(type(region))</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 <h2 id="1、人脸预处理"><a href="#1、人脸预处理" class="headerlink" title="1、人脸预处理"></a>1、人脸预处理</h2><p>人脸活体检测：从原始图片中识别出人脸的位置，以及68个特征点位置，借助shape_predictor_68_face_landmarks模型。</p>
-<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/phonetic-recognition/4.png" alt="image"></p>
+<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/4.png" alt="image"></p>
 <p>脸部检测提取：从原始图片中将人脸提取出来</p>
-<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/phonetic-recognition/5.png" alt="image"></p>
+<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/5.png" alt="image"></p>
 <p>脸部检测提取：人脸旋转，可以将侧脸拉正</p>
-<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/phonetic-recognition/3.png" alt="image"></p>
+<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/3.png" alt="image"></p>
 <h2 id="2、CNN人脸训练与识别"><a href="#2、CNN人脸训练与识别" class="headerlink" title="2、CNN人脸训练与识别"></a>2、CNN人脸训练与识别</h2><p>网络方案：2个卷积、2个pooling、两个全连接、所有激活函数均采用leaky_relu</p>
 <p>原始数据截图：</p>
-<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/phonetic-recognition/1.png" alt="image"></p>
+<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/1.png" alt="image"></p>
 <p>处理后的数据</p>
-<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/phonetic-recognition/2.png" alt="image"></p>
+<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/2.png" alt="image"></p>
 <p>训练效果：</p>
-<p>![image](image/phonetic-recognition/6.png</p>
+<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/6.png" alt="image"></p>
 <p>测试效果：</p>
-<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/phonetic-recognition/7.png" alt="image"></p>
+<p><img src="/2018/01/05/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/7.png" alt="image"></p>
 
       
     </div>
