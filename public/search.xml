@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>image</title>
-    <url>/2020/04/03/image/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>通用日志收集SDK</title>
     <url>/2020/04/01/%E9%80%9A%E7%94%A8%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86SDK/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该项目可用于java、spark和hadoop项目的运行日志转发到kafka</p>
@@ -316,9 +311,18 @@
   <entry>
     <title>语音识别</title>
     <url>/2018/01/08/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/</url>
-    <content><![CDATA[<h2 id="phonetic-recognition项目介绍"><a href="#phonetic-recognition项目介绍" class="headerlink" title="phonetic-recognition项目介绍"></a>phonetic-recognition项目介绍</h2><p>采用cnn方案进行训练，与人脸识别face-recognition项目的网络结构类似<br /><br>phonetic-recognition项目将一个维度的音频向量处理成了一个音频特征矩阵<br /><br>MFCC相关知识参见“梅尔频率倒谱系数 MFCC”一文<br /><br>最后用cnn训练，后面过程与人脸识别类似<br /><br><br /></p>
+    <content><![CDATA[<h2 id="phonetic-recognition项目介绍"><a href="#phonetic-recognition项目介绍" class="headerlink" title="phonetic-recognition项目介绍"></a>phonetic-recognition项目介绍</h2><p>采用cnn方案进行训练，与人脸识别face-recognition项目的网络结构类似</p>
+<p>phonetic-recognition项目将一个维度的音频向量处理成了一个音频特征矩阵</p>
+<p>MFCC相关知识参见“梅尔频率倒谱系数 MFCC”一文</p>
+<p>最后用cnn训练，后面过程与人脸识别类似</p>
 <h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><p><a href="https://github.com/duhanmin/phonetic-recognition.git" target="_blank" rel="noopener">https://github.com/duhanmin/phonetic-recognition.git</a></p>
-<h2 id="音频训练与识别"><a href="#音频训练与识别" class="headerlink" title="音频训练与识别"></a>音频训练与识别<br /></h2><p>语音MFCCs特征处理：<br /><br><img src="https://github.com/duhanmin/phonetic-recognition/blob/master/images/3.png" alt="image"><br /><br /><br>训练效果：<br /><br><img src="https://github.com/duhanmin/phonetic-recognition/blob/master/images/1.jpg" alt="image"><br /><br /><br>识别效果：<br /><br>其中1的置信度低的原因是：我用自己的声音训练，用别人的声音去识别，虽然低，但也识别对了<br /><br><img src="https://github.com/duhanmin/phonetic-recognition/blob/master/images/2.jpg" alt="image"><br /><br /></p>
+<h2 id="音频训练与识别"><a href="#音频训练与识别" class="headerlink" title="音频训练与识别"></a>音频训练与识别</h2><p>语音MFCCs特征处理：</p>
+<p><img src="/2018/01/08/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/3.png" alt="image"></p>
+<p>训练效果：</p>
+<p><img src="/2018/01/08/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/1.jpg" alt="image"></p>
+<p>识别效果：</p>
+<p>其中1的置信度低的原因是：我用自己的声音训练，用别人的声音去识别，虽然低，但也识别对了</p>
+<p><img src="/2018/01/08/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/2.jpg" alt="image"></p>
 ]]></content>
       <categories>
         <category>语音识别</category>
