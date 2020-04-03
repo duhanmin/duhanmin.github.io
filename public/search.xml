@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>images</title>
+    <url>/2020/04/03/images-1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>images</title>
+    <url>/2020/04/03/images/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>通用日志收集SDK</title>
     <url>/2020/04/01/%E9%80%9A%E7%94%A8%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86SDK/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该项目可用于java、spark和hadoop项目的运行日志转发到kafka</p>
