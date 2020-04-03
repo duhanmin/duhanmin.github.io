@@ -246,7 +246,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-03 14:14:41" itemprop="dateModified" datetime="2020-04-03T14:14:41+08:00">2020-04-03</time>
+                <time title="修改时间：2020-04-03 14:19:10" itemprop="dateModified" datetime="2020-04-03T14:19:10+08:00">2020-04-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -273,7 +273,8 @@
       
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该项目可用于java、spark和hadoop项目的运行日志转发到kafka</p>
 <p>工程中的日志通过该SDK收集发送到kafka，通过logstash收集到ES，通过kibana建立项目日志索引区分查看</p>
-<h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><h3 id="Spark-on-Yarn-日志接入ES"><a href="#Spark-on-Yarn-日志接入ES" class="headerlink" title="Spark on Yarn 日志接入ES"></a>Spark on Yarn 日志接入ES</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--jars  libs/kafka-clients-1.0.1.3.0.0.0-1634.jar,  \</span><br><span class="line">--files spark-log4j.properties,  \</span><br><span class="line">--conf spark.driver.extraJavaOptions="-Dlog4j.configuration=spark-log4j.properties" \</span><br><span class="line">--conf spark.executor.extraJavaOptions="-Dlog4j.configuration=spark-log4j.properties" \</span><br></pre></td></tr></table></figure>
+<h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><h3 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h3><p><a href="https://github.com/duhanmin/log-router.git" target="_blank" rel="noopener">https://github.com/duhanmin/log-router.git</a></p>
+<h3 id="Spark-on-Yarn-日志接入ES"><a href="#Spark-on-Yarn-日志接入ES" class="headerlink" title="Spark on Yarn 日志接入ES"></a>Spark on Yarn 日志接入ES</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--jars  libs/kafka-clients-1.0.1.3.0.0.0-1634.jar,  \</span><br><span class="line">--files spark-log4j.properties,  \</span><br><span class="line">--conf spark.driver.extraJavaOptions="-Dlog4j.configuration=spark-log4j.properties" \</span><br><span class="line">--conf spark.executor.extraJavaOptions="-Dlog4j.configuration=spark-log4j.properties" \</span><br></pre></td></tr></table></figure>
 
 <h3 id="Java、Spring、Spark、Flink接入日志方式类似"><a href="#Java、Spring、Spark、Flink接入日志方式类似" class="headerlink" title="Java、Spring、Spark、Flink接入日志方式类似"></a>Java、Spring、Spark、Flink接入日志方式类似</h3><ul>
 <li>详见Spark和Flink官网</li>

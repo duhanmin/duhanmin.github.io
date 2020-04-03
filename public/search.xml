@@ -5,7 +5,8 @@
     <url>/2020/04/01/%E9%80%9A%E7%94%A8%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86SDK/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该项目可用于java、spark和hadoop项目的运行日志转发到kafka</p>
 <p>工程中的日志通过该SDK收集发送到kafka，通过logstash收集到ES，通过kibana建立项目日志索引区分查看</p>
-<h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><h3 id="Spark-on-Yarn-日志接入ES"><a href="#Spark-on-Yarn-日志接入ES" class="headerlink" title="Spark on Yarn 日志接入ES"></a>Spark on Yarn 日志接入ES</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">--jars  libs/kafka-clients-1.0.1.3.0.0.0-1634.jar,  \</span><br><span class="line">--files spark-log4j.properties,  \</span><br><span class="line">--conf spark.driver.extraJavaOptions="-Dlog4j.configuration=spark-log4j.properties" \</span><br><span class="line">--conf spark.executor.extraJavaOptions="-Dlog4j.configuration=spark-log4j.properties" \</span><br></pre></td></tr></table></figure>
+<h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><h3 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h3><p><a href="https://github.com/duhanmin/log-router.git" target="_blank" rel="noopener">https://github.com/duhanmin/log-router.git</a></p>
+<h3 id="Spark-on-Yarn-日志接入ES"><a href="#Spark-on-Yarn-日志接入ES" class="headerlink" title="Spark on Yarn 日志接入ES"></a>Spark on Yarn 日志接入ES</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">--jars  libs/kafka-clients-1.0.1.3.0.0.0-1634.jar,  \</span><br><span class="line">--files spark-log4j.properties,  \</span><br><span class="line">--conf spark.driver.extraJavaOptions="-Dlog4j.configuration=spark-log4j.properties" \</span><br><span class="line">--conf spark.executor.extraJavaOptions="-Dlog4j.configuration=spark-log4j.properties" \</span><br></pre></td></tr></table></figure>
 
 <h3 id="Java、Spring、Spark、Flink接入日志方式类似"><a href="#Java、Spring、Spark、Flink接入日志方式类似" class="headerlink" title="Java、Spring、Spark、Flink接入日志方式类似"></a>Java、Spring、Spark、Flink接入日志方式类似</h3><ul>
 <li>详见Spark和Flink官网</li>
@@ -28,6 +29,8 @@
 
 <p>logstash配置</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">    kafka &#123;</span><br><span class="line">        bootstrap_servers =&gt; ["ip1:port,ip2:port"]</span><br><span class="line">        group_id =&gt; "es-transfer"</span><br><span class="line">        topics =&gt; ["HOTWHEELS-REALTIME_LOG"]</span><br><span class="line">        consumer_threads =&gt; 5</span><br><span class="line">        decorate_events =&gt; true</span><br><span class="line">        codec =&gt; "json"</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">    elasticsearch &#123;</span><br><span class="line">        hosts =&gt; ["ip1:port","ip2:port"]</span><br><span class="line">        codec =&gt; "json"</span><br><span class="line">        index =&gt; "%&#123;eventChannel&#125;"</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
 ]]></content>
       <categories>
         <category>日志</category>
